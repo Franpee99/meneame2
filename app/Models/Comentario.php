@@ -10,9 +10,9 @@ class Comentario extends Model
     /** @use HasFactory<\Database\Factories\ComentarioFactory> */
     use HasFactory;
 
-    protected $fillable = ['post_id', 'user_id', 'contenido'];
+    protected $fillable = ['noticia_id', 'user_id', 'contenido'];
 
-    public function post()
+    public function noticia()
     {
         return $this->belongsTo(Noticia::class);
     }

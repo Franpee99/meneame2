@@ -14,9 +14,9 @@
                             Editar
                         </button>
                     </a>
-                    @endcan
+                @endcan
 
-                    @can('delete', $noticia)
+                @can('delete', $noticia)
                     <form class="inline" method="POST" action="{{ route('noticias.destroy', $noticia) }}">
                         @csrf
                         @method("DELETE")
@@ -33,6 +33,7 @@
                 </a>
             </h5>
             <p class="text-xs text-gray-500 pb-5">{{ $noticia->created_at->format('d M Y') }} | {{ $noticia->categoria->nombre }}</p>
+            <p class="font-normal text-gray-700 dark:text-gray-400">{{ $noticia->descripcion }}</p>
         </div>
 
         <!-- Imagen -->
@@ -49,6 +50,7 @@
             <p class="text-sm text-gray-500 mt-2">Aún no hay comentarios. Sé el primero en comentar.</p>
         @else
             <div class="space-y-4 mt-4">
+
                 @foreach ($noticia->comentarios as $comentario)
                     <div class="p-4 bg-white dark:bg-gray-800 border border-gray-200 rounded-lg shadow">
                         <p class="text-sm font-medium">
@@ -56,8 +58,23 @@
                             <span class="text-xs text-gray-500">· {{ $comentario->created_at->diffForHumans() }}</span>
                         </p>
                         <p class="text-sm text-gray-800 dark:text-gray-200">{{ $comentario->contenido }}</p>
+
+                        <div class="flex justify-end">
+
+                            @can('delete', $comentario)
+                                <form class="inline" method="POST" action="{{ route('comentarios.destroy', $comentario) }}">
+                                    @csrf
+                                    @method("DELETE")
+                                    <button type="submit" class="px-2 py-1 text-xs font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                        Borrar
+                                    </button>
+                                </form>
+                            @endcan
+
+                        </div>
                     </div>
                 @endforeach
+
             </div>
         @endif
     </div>

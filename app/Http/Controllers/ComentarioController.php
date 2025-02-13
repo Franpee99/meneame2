@@ -47,7 +47,7 @@ class ComentarioController extends Controller implements HasMiddleware
         Comentario::create([
             'noticia_id' => $noticia->id,
             'user_id' => Auth::id(),
-            'contenido' => $request->contenido
+            'contenido' => $request->validated()['contenido']
         ]);
 
         return redirect()->route('home')->with('success', 'Comentario agregado.');
@@ -82,6 +82,7 @@ class ComentarioController extends Controller implements HasMiddleware
      */
     public function destroy(Comentario $comentario)
     {
-        //
+        $comentario->delete();
+        return redirect()->route('home');
     }
 }
