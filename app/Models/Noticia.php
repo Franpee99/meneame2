@@ -35,4 +35,9 @@ class Noticia extends Model
     {
         return $this->imagen ?? asset('storage/imagenes/' . $this->id . '.jpg'); //para que salgan las imagenes del noticiaFactory
     }
+
+    public function comentarios()
+    {
+        return $this->hasMany(Comentario::class);
+    }
 }
