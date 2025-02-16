@@ -47,7 +47,8 @@ class ComentarioController extends Controller implements HasMiddleware
         Comentario::create([
             'noticia_id' => $noticia->id,
             'user_id' => Auth::id(),
-            'contenido' => $request->validated()['contenido']
+            'contenido' => $request->validated()['contenido'],
+            'parent_id' => $request->parent_id
         ]);
 
         return redirect()->route('home')->with('success', 'Comentario agregado.');

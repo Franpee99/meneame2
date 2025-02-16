@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('noticia_id')->constrained()->onDelete('cascade'); // Relación con posts
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relación con users
             $table->text('contenido');
+
+            // Relación recursiva
+            $table->foreignId('parent_id')->nullable()->constrained('comentarios')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

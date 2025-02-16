@@ -22,7 +22,8 @@ class StoreComentarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'contenido' => 'required|string|max:500'
+            'contenido' => 'required|string|max:500',
+            'parent_id' => 'nullable|exists:comentarios,id'
         ];
     }
 }
