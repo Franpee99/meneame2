@@ -44,12 +44,24 @@ class ComentarioController extends Controller implements HasMiddleware
     {
         //Validacion del contenido en el request
 
-        Comentario::create([
-            'noticia_id' => $noticia->id,
-            'user_id' => Auth::id(),
-            'contenido' => $request->validated()['contenido'],
-            'parent_id' => $request->parent_id
-        ]);
+        $validated = $request->validated();
+
+        $comentario = new Comentario();
+        $comentario->noticia_id = $noticia->id;
+        $comentario->user_id = Auth::id();
+        $comentario->contenido = $validated['contenido'];
+        $comentario->parent_id = $validated['parent_id'] ?? null;
+
+        if ($comentario->parent_id) {
+            $comentario->comentable_type = Comentario::class;
+            $comentario->comentable_id = $comentario->parent_id;
+        } else {
+            $comentario->comentable_type = Noticia::class;
+            $comentario->comentable_id = $noticia->id;
+        }
+
+        $comentario->save();
+
 
         return redirect()->route('home')->with('success', 'Comentario agregado.');
     }

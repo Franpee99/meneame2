@@ -16,9 +16,10 @@ return new class extends Migration
             $table->foreignId('noticia_id')->constrained()->onDelete('cascade'); // Relación con posts
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relación con users
             $table->text('contenido');
+            $table->foreignId('parent_id')->nullable()->constrained('comentarios')->onDelete('cascade'); // Relación recursiva
 
-            // Relación recursiva
-            $table->foreignId('parent_id')->nullable()->constrained('comentarios')->onDelete('cascade');
+            // Polimórfica
+            $table->morphs('comentable');
 
             $table->timestamps();
         });

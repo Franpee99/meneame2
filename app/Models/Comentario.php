@@ -22,15 +22,14 @@ class Comentario extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Relación recursiva: Un comentario puede tener un padre
-    public function parent()
-    {
-        return $this->belongsTo(Comentario::class, 'parent_id');
+    //Relación polimórfica
+    public function comentable(){
+        return $this->morphTo();
     }
 
-    // Relación recursiva: Un comentario puede tener muchas respuestas (hijos)
-    public function replies()
+    //Un comentario puede tener muchos comentarios
+    public function comentarios()
     {
-        return $this->hasMany(Comentario::class, 'parent_id')->with('replies'); // Carga respuestas recursivamente
+        return $this->morphMany(Comentario::class, 'comentable');
     }
 }
