@@ -10,6 +10,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class NoticiaController extends Controller implements HasMiddleware
 {
@@ -92,12 +93,37 @@ class NoticiaController extends Controller implements HasMiddleware
     {
         //En vez de poner aqui la validacion, se pone en el UpdateNoticiaRequest
 
-        Gate::authorize('update', $noticia); //Lo ponemos otra vez por seguridad
+       // Autorizar la edición
+        Gate::authorize('update', $noticia);
 
-        $noticia->fill($request->input());
+        // Actualizar los datos del formulario
+        $noticia->fill($request->only(['titular', 'url', 'descripcion', 'categoria_id']));
+
+        // Si el usuario sube una nueva imagen, la reemplazamos
+        if ($request->hasFile('imagen')) {
+            $archivo = $request->file('imagen');
+            $nombre = $noticia->id . '.jpg'; // Mantiene el mismo nombre de archivo que en store()
+
+            // Eliminar la imagen anterior si existe
+            if ($noticia->imagen) {
+                $rutaAnterior = str_replace(asset('storage/'), '', $noticia->imagen);
+                if (Storage::disk('public')->exists($rutaAnterior)) {
+                    Storage::disk('public')->delete($rutaAnterior);
+                }
+            }
+
+            // Guardar la nueva imagen en "storage/app/public/imagenes"
+            $archivo->storeAs('imagenes', $nombre, 'public');
+
+            // Actualizar la ruta de la imagen en la base de datos
+            $noticia->imagen = asset("storage/imagenes/$nombre");
+        }
+
         $noticia->save();
+
         return redirect()->route('home');
     }
+
 
     /**
      * Remove the specified resource from storage.

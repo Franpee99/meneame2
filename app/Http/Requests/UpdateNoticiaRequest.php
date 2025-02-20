@@ -26,6 +26,7 @@ class UpdateNoticiaRequest extends FormRequest
             'url' => 'required|string|max:255',
             'descripcion' => 'required|string',
             'categoria_id' => 'required|exists:categorias,id',
+            //'imagen' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 }
